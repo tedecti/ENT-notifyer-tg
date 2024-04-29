@@ -13,10 +13,18 @@ logger = logging.getLogger(__name__)
 
 URL = "https://app.testcenter.kz/profile/applications/2"
 current_content = ""
+started_users = set()
+
 
 def start(update: Update, context: CallbackContext) -> None:
+    user_id = update.message.chat_id
+    if user_id in started_users:
+        update.message.reply_text('Бот уже запущен и отслеживает изменения на странице.')
+        return
+    started_users.add(user_id)
     update.message.reply_text('Бот запущен и начал отслеживание изменений на странице.')
     context.job_queue.run_repeating(check_page, interval=300, first=0, context=update.message.chat_id)
+
 
 def get_page_content():
     options = Options()
