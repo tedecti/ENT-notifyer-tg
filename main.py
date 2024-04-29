@@ -1,4 +1,5 @@
 import logging
+import os
 from telegram import Update, Bot
 from telegram.ext import Updater, CommandHandler, CallbackContext, JobQueue
 from selenium import webdriver
@@ -35,13 +36,12 @@ def check_page(context: CallbackContext) -> None:
 
     if new_content != current_content:
         if current_content != "":
-            context.bot.send_message(chat_id=job.context, text='Обнаружены изменения на странице!')
+            context.bot.send_message(chat_id=job.context, text='ЕНТ ВЫШЛО @taymik @agasphergg')
         current_content = new_content
-        print(current_content)
 
 
 def main() -> None:
-    token = '7007694957:AAGiz6Diu3kOQo4ue0Q_Rqps4uOWTJP9gnc'
+    token = os.getenv('TOKEN')
     bot = Bot(token)
     updater = Updater(bot=bot, use_context=True)
 
