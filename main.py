@@ -16,20 +16,22 @@ current_content = ""
 started_users = set()
 
 
+# os.chmod("/home/container/chromedriver", 755)
+
 def start(update: Update, context: CallbackContext) -> None:
     user_id = update.message.chat_id
     if user_id in started_users:
-        update.message.reply_text('Бот уже запущен и отслеживает изменения на странице.')
+        update.message.reply_text('артём лох')
         return
     started_users.add(user_id)
-    update.message.reply_text('Бот запущен и начал отслеживание изменений на странице.')
-    context.job_queue.run_repeating(check_page, interval=300, first=0, context=update.message.chat_id)
+    update.message.reply_text('ЖДЕМ ЕНТ.')
+    context.job_queue.run_repeating(check_page, interval=10, first=0, context=update.message.chat_id)
 
 
 def get_page_content():
     options = Options()
     options.add_argument("--headless=new")
-    service = Service(ChromeDriverManager().install())
+    service = Service("chromedriver")
     driver = webdriver.Chrome(service=service, options=options)
     driver.get(URL)
     content = driver.find_element(By.TAG_NAME, "body").text
@@ -46,6 +48,7 @@ def check_page(context: CallbackContext) -> None:
         if current_content != "":
             context.bot.send_message(chat_id=job.context, text='ЕНТ ВЫШЛО @taymik @agasphergg')
         current_content = new_content
+        print(current_content)
 
 
 def main() -> None:
@@ -53,7 +56,7 @@ def main() -> None:
     bot = Bot(token)
     updater = Updater(bot=bot, use_context=True)
 
-    updater.dispatcher.add_handler(CommandHandler('start', start))
+    updater.dispatcher.add_handler(CommandHandler('ent', start))
 
     updater.start_polling()
     updater.idle()
